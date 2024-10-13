@@ -26,6 +26,7 @@
 - `Telegram_Api_Hash`：App api_hash
 - `Telegram_Channel_Id`：登入 https://web.telegram.org/ ，按一下Channel，URL最後10位數字就是Channel ID
 - `Futu_Trading_Password`：牛牛6位數的交易密碼
+- `Trade_Environment`：模擬交易輸入 `SIMULATE`，真實交易輸入 `REAL` (只提供設定參考，請再三閱讀免責聲明再決定使用)
 
 
 #### 4. 安裝Futu OpenD：https://openapi.futunn.com/futu-api-doc/quick/opend-base.html

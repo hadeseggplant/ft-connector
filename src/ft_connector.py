@@ -16,6 +16,7 @@ TG_API_ID = config["DEFAULT"]["Telegram_Api_Id"]
 TG_API_HASH = config["DEFAULT"]["Telegram_Api_Hash"]
 TG_CHANNEL_ID = int(config["DEFAULT"]["Telegram_Channel_Id"])
 FUTU_TRADING_PWD = config["DEFAULT"]["Futu_Trading_Password"]
+TRADE_ENV = TrdEnv.REAL if config["DEFAULT"]["Trade_Environment"] == "REAL" else TRADE_ENV = TrdEnv.SIMULATE
 
 
 NORMAL_CLOSE_TIME = datetime.time(2, 54).strftime("%H:%M")
@@ -104,7 +105,7 @@ def hti():
             if ret == RET_OK:
                 ret, data = trd_ctx.position_list_query(
                     code=hti_code,
-                    trd_env=TrdEnv.SIMULATE,
+                    trd_env=TRADE_ENV,
                 )
                 if ret == RET_OK:
                     print(data)
@@ -118,7 +119,7 @@ def hti():
                             code=hti_code,
                             trd_side=TrdSide.BUY,
                             order_type=OrderType.MARKET,
-                            trd_env=TrdEnv.SIMULATE,
+                            trd_env=TRADE_ENV,
                         )
                         if ret == RET_OK:
                             print(data)
@@ -146,7 +147,7 @@ def hti():
 
                                         ret, data = trd_ctx.position_list_query(
                                             code=hti_code,
-                                            trd_env=TrdEnv.SIMULATE,
+                                            trd_env=TRADE_ENV,
                                         )
                                         if ret == RET_OK:
                                             print(data)
@@ -157,7 +158,7 @@ def hti():
                                                     code=hti_code,
                                                     trd_side=TrdSide.SELL,
                                                     order_type=OrderType.MARKET,
-                                                    trd_env=TrdEnv.SIMULATE,
+                                                    trd_env=TRADE_ENV,
                                                 )
                                                 if ret == RET_OK:
                                                     print(data)
@@ -268,7 +269,7 @@ def hsif():
             if ret == RET_OK:
                 ret, data = trd_ctx.position_list_query(
                     code=HSIF_CODE + hsif_trade_number,
-                    trd_env=TrdEnv.SIMULATE,
+                    trd_env=TRADE_ENV,
                 )
                 if ret == RET_OK:
                     print(data)
@@ -282,7 +283,7 @@ def hsif():
                             code=HSIF_CODE + hsif_trade_number,
                             trd_side=TrdSide.SELL,
                             order_type=OrderType.MARKET,
-                            trd_env=TrdEnv.SIMULATE,
+                            trd_env=TRADE_ENV,
                         )
                         if ret == RET_OK:
                             print(data)
@@ -310,7 +311,7 @@ def hsif():
 
                                         ret, data = trd_ctx.position_list_query(
                                             code=HSIF_CODE + hsif_trade_number,
-                                            trd_env=TrdEnv.SIMULATE,
+                                            trd_env=TRADE_ENV,
                                         )
                                         if ret == RET_OK:
                                             print(data)
@@ -321,7 +322,7 @@ def hsif():
                                                     code=HSIF_CODE + hsif_trade_number,
                                                     trd_side=TrdSide.BUY,
                                                     order_type=OrderType.MARKET,
-                                                    trd_env=TrdEnv.SIMULATE,
+                                                    trd_env=TRADE_ENV,
                                                 )
                                                 if ret == RET_OK:
                                                     print(data)
@@ -432,7 +433,7 @@ def close_position():
             ret, data = trd_ctx.unlock_trade(FUTU_TRADING_PWD)
             if ret == RET_OK:
                 ret, position_data = trd_ctx.position_list_query(
-                    trd_env=TrdEnv.SIMULATE,
+                    trd_env=TRADE_ENV,
                 )
                 if ret == RET_OK:
                     print(position_data)
@@ -455,7 +456,7 @@ def close_position():
                                     code=position_data["code"][i],
                                     trd_side=TrdSide.SELL,
                                     order_type=OrderType.MARKET,
-                                    trd_env=TrdEnv.SIMULATE,
+                                    trd_env=TRADE_ENV,
                                 )
                                 if ret == RET_OK:
                                     print(data)
@@ -478,7 +479,7 @@ def close_position():
                                     code=position_data["code"][i],
                                     trd_side=TrdSide.BUY,
                                     order_type=OrderType.MARKET,
-                                    trd_env=TrdEnv.SIMULATE,
+                                    trd_env=TRADE_ENV,
                                 )
                                 if ret == RET_OK:
                                     print(data)
