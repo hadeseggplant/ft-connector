@@ -21,7 +21,7 @@
 #### 3. 用文字編輯軟件開啟 `config.ini` 輸入參數，
 - `Hti_Quantity`：HTI張數
 - `Hsif_Quantity`：HSIF張數
-- `Hsif_Big_Or_Small`：選擇HSIF大/細期，大期輸入 `HK.HSI`，細期輸入 `HK.MHI`
+- `Hsif_Type`：選擇HSIF大/細期，大期輸入 `HK.HSI`，細期輸入 `HK.MHI`
 - `Telegram_Api_Id`：App api_id
 - `Telegram_Api_Hash`：App api_hash
 - `Telegram_Channel_Id`：登入 https://web.telegram.org/ ，按一下Channel，URL最後10位數字就是Channel ID
