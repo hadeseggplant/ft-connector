@@ -16,7 +16,12 @@ TG_API_ID = config["DEFAULT"]["Telegram_Api_Id"]
 TG_API_HASH = config["DEFAULT"]["Telegram_Api_Hash"]
 TG_CHANNEL_ID = int(config["DEFAULT"]["Telegram_Channel_Id"])
 FUTU_TRADING_PWD = config["DEFAULT"]["Futu_Trading_Password"]
-TRADE_ENV = TrdEnv.REAL if config["DEFAULT"]["Trade_Environment"] == "REAL" else TRADE_ENV = TrdEnv.SIMULATE
+
+env_mapping = {
+    "SIMULATE": TrdEnv.SIMULATE,
+    "REAL": TrdEnv.REAL,
+}
+TRADE_ENV = env_mapping.get(config["DEFAULT"]["Trade_Environment"])
 
 
 NORMAL_CLOSE_TIME = datetime.time(2, 54).strftime("%H:%M")

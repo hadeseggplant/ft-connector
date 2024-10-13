@@ -26,13 +26,13 @@
 - `Telegram_Api_Hash`：App api_hash
 - `Telegram_Channel_Id`：登入 https://web.telegram.org/ ，按一下Channel，URL最後10位數字就是Channel ID
 - `Futu_Trading_Password`：牛牛6位數的交易密碼
-- `Trade_Environment`：模擬交易輸入 `SIMULATE`，真實交易輸入 `REAL` (只提供設定參考，請再三閱讀免責聲明再決定使用)
+- `Trade_Environment`：模擬交易輸入 `SIMULATE`，真實交易輸入 `REAL` (只提供設定參考，請再三閱讀 `免責聲明` 再決定使用)
 
 
 #### 4. 安裝Futu OpenD：https://openapi.futunn.com/futu-api-doc/quick/opend-base.html
 
 
-#### 5. 安裝後把 `Futu OpenD` 的`捷徑`放到 `/ft-connector/` 資料夾內
+#### 5. 安裝後把 `Futu OpenD` 的 `捷徑` 放到 `/ft-connector/` 資料夾內
 
 
 #### 6. 點擊 `start.bat`，系統會先安裝Python library，
@@ -46,7 +46,7 @@ Finished checking and installing Python libraries
 
 
 #### 7. 然後系統會要求登入Telegram`兩次`(HTI和HSIF)，順序輸入`兩次`：
-- 電話號碼`(連+852)`
+- 電話號碼(連+852)
 - Login Token(會發送至Telegram官方通知)
 - 登入Telegram的密碼(如有)
 
@@ -65,4 +65,4 @@ ft-connector started(HSIF)...
 
 
 #### 11. 如擔心Windows自動更新重新開機影響運作，請自行更改系統更新時間，並可參考此文章將 `ft-connector` 設定成開機時自動啟動：https://ithelp.ithome.com.tw/questions/10198372
-- 注意：請先把 `start.bat` 建立捷徑再將`捷徑`放入 `/啟動/` 資料夾，不要把 `/ft-connector/` 資料夾內的 `start.bat` 直接抄入去
+- 注意：請先把 `start.bat` 建立捷徑再將 `捷徑` 放入 `/啟動/` 資料夾，不要把 `/ft-connector/` 資料夾內的 `start.bat` 直接抄入去
