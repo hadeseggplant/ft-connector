@@ -29,10 +29,10 @@
 - `Trade_Environment`：模擬交易輸入 `SIMULATE`，真實交易輸入 `REAL` (只提供設定參考，請再三閱讀 `免責聲明` 再決定使用)
 
 
-#### 4. 安裝Futu OpenD：https://openapi.futunn.com/futu-api-doc/quick/opend-base.html
+#### 4. 下載Futu OpenD：https://www.futunn.com/download/fetch-lasted-link?name=opend-windows
 
 
-#### 5. 安裝後把 `Futu OpenD` 的 `捷徑` 放到 `/ft-connector/` 資料夾內
+#### 5. 解壓縮後開啟帶有 `-GUI` 的資料夾進行安裝，完成後把 `Futu OpenD` 的 `捷徑` 放到 `/ft-connector/` 資料夾內
 
 
 #### 6. 點擊 `start.bat`，系統會先安裝Python library，
@@ -66,3 +66,8 @@ ft-connector started(HSIF)...
 
 #### 11. 如擔心Windows自動更新重新開機影響運作，請自行更改系統更新時間，並可參考此文章將 `ft-connector` 設定成開機時自動啟動：https://ithelp.ithome.com.tw/questions/10198372
 - 注意：請先把 `start.bat` 建立捷徑再將 `捷徑` 放入 `/啟動/` 資料夾，不要把 `/ft-connector/` 資料夾內的 `start.bat` 直接抄入去
+
+
+## References
+- https://openapi.futunn.com/futu-api-doc/intro/intro.html
+- https://docs.telethon.dev/en/stable/
