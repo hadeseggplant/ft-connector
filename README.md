@@ -1,11 +1,12 @@
 # ft-connector
 
 ## 免責聲明
-- 「本程式碼 `ft-connector` ﹝下稱本程式﹞」目的為提供學習電腦編程資訊及牛牛API應用學術研究，非供交易或投資之目的，因此請勿使用於真實交易帳戶，請使用於模擬帳戶。透過「本程式」獲得之資料僅作為參考，非供使用者之投資買賣建議，也並不構成投資意見，亦不應被視為任何投資或贖回之招引。使用者在進行投資決策前，應審慎評估或先行諮詢專業人士，自行決定是否使用「本程式」所提供的程式碼，使用者應自行判斷與承擔風險。任何依賴「本程式」提供之程式碼自行作出交易，本研發者恕不負擔任何盈虧及法律責任，請在使用「本程式」及投資決策前謹慎評估風險。
-- 另請參閱：
-  - https://www.futuhk.com/about/disclaimer?global_content=%7B%22promote_id%22%3A13765%2C%22sub_promote_id%22%3A1%7D
-  - https://www.futuhk.com/about/portfolio-agreement?help_to_www_redirect=true
-  - https://github.com/hadeseggplant/ft-connector?tab=Apache-2.0-1-ov-file
+「本程式碼 `ft-connector` ﹝下稱本程式﹞」目的為提供學習電腦編程資訊及牛牛API應用學術研究，非供交易或投資之目的，因此請勿使用於真實交易帳戶，請使用於模擬帳戶。透過「本程式」獲得之資料僅作為參考，非供使用者之投資買賣建議，也並不構成投資意見，亦不應被視為任何投資或贖回之招引。使用者在進行投資決策前，應審慎評估或先行諮詢專業人士，自行決定是否使用「本程式」所提供的程式碼，使用者應自行判斷與承擔風險。任何依賴「本程式」提供之程式碼自行作出交易，本研發者恕不負擔任何盈虧及法律責任，請在使用「本程式」及投資決策前謹慎評估風險。
+
+另請參閱：
+ - https://www.futuhk.com/about/disclaimer
+ - https://www.futuhk.com/about/portfolio-agreement
+ - https://github.com/hadeseggplant/ft-connector?tab=Apache-2.0-1-ov-file
 
 
 ## Guide
