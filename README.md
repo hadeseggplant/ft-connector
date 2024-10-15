@@ -31,7 +31,7 @@
 - `Telegram_Api_Id`：App api_id
 - `Telegram_Api_Hash`：App api_hash
 - `Telegram_Channel_Id`：登入 https://web.telegram.org/ ，按一下Channel，URL最後10位數字就是Channel ID
-- `Futu_Trading_Password`：牛牛6個位的交易密碼
+- `Futu_Trading_Password`：牛牛6位數字的交易密碼
 - `Trade_Environment`：模擬交易輸入 `SIMULATE`，真實交易輸入 `REAL` (只提供設定參考，請再三閱讀 `免責聲明` 再決定使用)
 
 
