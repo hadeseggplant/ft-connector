@@ -12,7 +12,7 @@ config.read(config_file_path)
 HTI_QTY = int(config["DEFAULT"]["Hti_Quantity"])
 HSIF_QTY = int(config["DEFAULT"]["Hsif_Quantity"])
 HSIF_CODE = config["DEFAULT"]["Hsif_Type"]
-TG_API_ID = config["DEFAULT"]["Telegram_Api_Id"]
+TG_API_ID = int(config["DEFAULT"]["Telegram_Api_Id"])
 TG_API_HASH = config["DEFAULT"]["Telegram_Api_Hash"]
 TG_CHANNEL_ID = int(config["DEFAULT"]["Telegram_Channel_Id"])
 FUTU_TRADING_PWD = config["DEFAULT"]["Futu_Trading_Password"]
