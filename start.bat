@@ -9,7 +9,13 @@ echo:
 echo:
 
 for %%i in (%packages%) do (
-    pip3 install %%i
+    pip3 show %%i >nul 2>&1
+    if %errorlevel% neq 0 (
+        echo Installing %%i...
+        pip3 install %%i
+    ) else (
+        echo %%i is already installed.
+    )
 )
 
 echo:
