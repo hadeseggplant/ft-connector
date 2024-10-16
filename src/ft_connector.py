@@ -97,10 +97,10 @@ def hti():
         if "系統提交 科指期貨HTI 買盤" in message.text:
             hti_code = "HK.HTI" + trade_number()
 
-            hti_stop_profit_msg = re.search(r"止賺價為(\d+\.\d+)", message.text)
+            hti_take_profit_msg = re.search(r"止賺價為(\d+\.\d+)", message.text)
             hti_stop_loss_msg = re.search(r"止蝕價為(\d+\.\d+)", message.text)
 
-            hti_stop_profit_price = round(float(hti_stop_profit_msg.group(1)))
+            hti_take_profit_price = round(float(hti_take_profit_msg.group(1)))
             hti_stop_loss_price = round(float(hti_stop_loss_msg.group(1)))
 
             trd_ctx = OpenFutureTradeContext()
@@ -142,7 +142,7 @@ def hti():
                                         return RET_ERROR, content
                                     print("PriceReminderTest ", content)
 
-                                    # Place HTI stop profit/stop loss order
+                                    # Place HTI take profit/stop loss order
                                     if content["code"] == hti_code:
                                         # Delete all related reminder
                                         quote_ctx.set_price_reminder(
@@ -186,24 +186,24 @@ def hti():
                             handler = PriceReminderTest()
                             quote_ctx.set_handler(handler)
 
-                            # Set HTI stop profit reminder
-                            ret_stop_profit, stop_profit_data = (
+                            # Set HTI take profit reminder
+                            ret_take_profit, take_profit_data = (
                                 quote_ctx.set_price_reminder(
                                     code=hti_code,
                                     op=SetPriceReminderOp.ADD,
                                     key=None,
                                     reminder_type=PriceReminderType.PRICE_UP,
                                     reminder_freq=PriceReminderFreq.ONCE,
-                                    value=hti_stop_profit_price,
+                                    value=hti_take_profit_price,
                                 )
                             )
-                            if ret_stop_profit == RET_OK:
+                            if ret_take_profit == RET_OK:
                                 print(
-                                    "Set HTI stop profit reminder successfully:",
-                                    hti_stop_profit_price,
+                                    "Set HTI take profit reminder successfully:",
+                                    hti_take_profit_price,
                                 )
                             else:
-                                print("error:", stop_profit_data)
+                                print("error:", take_profit_data)
 
                             # Set HTI stop loss reminder
                             ret_stop_loss, stop_loss_data = (
@@ -261,10 +261,10 @@ def hsif():
         if "系統提交 恆指期貨HSIF 沽盤" in message.text:
             hsif_trade_number = trade_number()
 
-            hsif_stop_profit_msg = re.search(r"止賺價為(\d+\.\d+)", message.text)
+            hsif_take_profit_msg = re.search(r"止賺價為(\d+\.\d+)", message.text)
             hsif_stop_loss_msg = re.search(r"止蝕價為(\d+\.\d+)", message.text)
 
-            hsif_stop_profit_price = round(float(hsif_stop_profit_msg.group(1)))
+            hsif_take_profit_price = round(float(hsif_take_profit_msg.group(1)))
             hsif_stop_loss_price = round(float(hsif_stop_loss_msg.group(1)))
 
             trd_ctx = OpenFutureTradeContext()
@@ -306,7 +306,7 @@ def hsif():
                                         return RET_ERROR, content
                                     print("PriceReminderTest ", content)
 
-                                    # Place HSIF stop profit/stop loss order
+                                    # Place HSIF take profit/stop loss order
                                     if content["code"] == "HK.HSI" + hsif_trade_number:
                                         # Delete all related reminder
                                         quote_ctx.set_price_reminder(
@@ -351,24 +351,24 @@ def hsif():
                             handler = PriceReminderTest()
                             quote_ctx.set_handler(handler)
 
-                            # Set HSIF stop profit reminder
-                            ret_stop_profit, stop_profit_data = (
+                            # Set HSIF take profit reminder
+                            ret_take_profit, take_profit_data = (
                                 quote_ctx.set_price_reminder(
                                     code="HK.HSI" + hsif_trade_number,
                                     op=SetPriceReminderOp.ADD,
                                     key=None,
                                     reminder_type=PriceReminderType.PRICE_DOWN,
                                     reminder_freq=PriceReminderFreq.ONCE,
-                                    value=hsif_stop_profit_price,
+                                    value=hsif_take_profit_price,
                                 )
                             )
-                            if ret_stop_profit == RET_OK:
+                            if ret_take_profit == RET_OK:
                                 print(
-                                    "Set HSIF stop profit reminder successfully:",
-                                    hsif_stop_profit_price,
+                                    "Set HSIF take profit reminder successfully:",
+                                    hsif_take_profit_price,
                                 )
                             else:
-                                print("error:", stop_profit_data)
+                                print("error:", take_profit_data)
 
                             # Set HSIF stop loss reminder
                             ret_stop_loss, stop_loss_data = (
