@@ -54,7 +54,7 @@ Finished checking and installing Python libraries
 
 #### 7. 然後系統會要求登入Telegram`兩次`(HTI和HSIF)，順序輸入`兩次`：
 - 電話號碼(連+852)
-- Login Token(會發送至Telegram官方通知)
+- Login code(會發送至Telegram官方通知)
 - 登入Telegram的密碼(如有)
 
 
