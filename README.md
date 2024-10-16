@@ -12,7 +12,9 @@
 ## User Guide
 
 
-#### 1. 下載最新版 `ft-connector`：https://github.com/hadeseggplant/ft-connector/releases (Source code (zip))
+#### 1. 下載最新版 `ft-connector`：https://github.com/hadeseggplant/ft-connector/releases
+- 按 `Source code (zip)`
+- 下載後解壓縮
 
 
 #### 2. 安裝Python 3.11：https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe
@@ -24,7 +26,7 @@
 - Generate後記低 `App api_id` 和 `App api_hash`
 
 
-#### 4. 用文字編輯軟件(Notepad / Word)開啟 `config.ini` ，輸入以下參數後儲存：
+#### 4. 用文字編輯軟件(Notepad)開啟 `config.ini` ，輸入以下參數後儲存：
 - `Hti_Quantity`：HTI張數
 - `Hsif_Quantity`：HSIF張數
 - `Hsif_Type`：選擇HSIF大/細期，大期輸入 `HK.HSI`，細期輸入 `HK.MHI`
@@ -32,11 +34,11 @@
 - `Telegram_Api_Hash`：App api_hash
 - `Telegram_Channel_Id`：登入 https://web.telegram.org/ ，按一下Channel，URL最後10位數字就是Channel ID
 - `Futu_Trading_Password`：牛牛6位數字的交易密碼
-- `Trade_Environment`：模擬交易輸入 `SIMULATE`，真實交易輸入 `REAL` (只提供設定參考，請再三閱讀 `免責聲明` 再決定使用)
+- `Trade_Environment`：模擬交易輸入 `SIMULATE`，真實交易輸入 `REAL` (只提供設定參考，請再三閱讀 [免責聲明](https://github.com/hadeseggplant/ft-connector?tab=readme-ov-file#%E5%85%8D%E8%B2%AC%E8%81%B2%E6%98%8E) 再決定使用)
 
 
 #### 5. 下載Futu OpenD：https://www.futunn.com/download/fetch-lasted-link?name=opend-windows
-- 解壓縮後開啟帶有 `-GUI` 的資料夾進行安裝
+- 解壓縮後開啟帶有 `GUI` 的資料夾進行安裝
 - 完成後把 `Futu OpenD` 的 `捷徑` 放到 `/ft-connector/` 資料夾內
 
 
@@ -72,7 +74,7 @@ ft-connector started(HSIF)...
 
 #### 11. 如擔心Windows自動更新重新開機影響運作，請自行更改系統更新時間
 - 並可參考此文章將 `ft-connector` 設定成開機時自動啟動：https://ithelp.ithome.com.tw/questions/10198372
-  - 注意：請先把 `start.bat` 建立捷徑再將 `捷徑` 放入 `/啟動/` 資料夾，不要把 `/ft-connector/` 資料夾內的 `start.bat` 直接抄入去
+  - 注意：請先把 `start.bat` 建立捷徑(右鍵 -> 建立捷徑)，再將 `捷徑` 放入 `/啟動/` 資料夾，不要把 `/ft-connector/` 資料夾內的 `start.bat` 直接抄過去
 
 
 ## References
