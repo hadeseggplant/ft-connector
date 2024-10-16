@@ -106,136 +106,108 @@ def hti():
             trd_ctx = OpenFutureTradeContext()
             quote_ctx = OpenQuoteContext()
 
-            ret, data = trd_ctx.unlock_trade(FUTU_TRADING_PWD)
-            if ret == RET_OK:
-                ret, data = trd_ctx.position_list_query(
+            ret_unlock_trade, unlock_trade_data = trd_ctx.unlock_trade(FUTU_TRADING_PWD)
+            if ret_unlock_trade == RET_OK:
+
+                # Place HTI call order
+                ret_place_order, place_order_data = trd_ctx.place_order(
+                    price=28,
+                    qty=HTI_QTY,
                     code=hti_code,
+                    trd_side=TrdSide.BUY,
+                    order_type=OrderType.MARKET,
                     trd_env=TRADE_ENV,
                 )
-                if ret == RET_OK:
-                    print(data)
-                    if data.shape[0] == 0 or (
-                        data.shape[0] > 0 and data["qty"][0] == 0
-                    ):
-                        # Place HTI call order
-                        ret, data = trd_ctx.place_order(
-                            price=28,
-                            qty=HTI_QTY,
-                            code=hti_code,
-                            trd_side=TrdSide.BUY,
-                            order_type=OrderType.MARKET,
-                            trd_env=TRADE_ENV,
+                if ret_place_order == RET_OK:
+                    print(place_order_data)
+
+                    class PriceReminderTest(PriceReminderHandlerBase):
+                        def on_recv_rsp(self, rsp_pb):
+                            ret_code, content = super(
+                                PriceReminderTest, self
+                            ).on_recv_rsp(rsp_pb)
+                            if ret_code != RET_OK:
+                                print("PriceReminderTest: error, msg: %s" % content)
+                                return RET_ERROR, content
+                            print("PriceReminderTest ", content)
+
+                            # Place HTI take profit/stop loss order
+                            if content["code"] == hti_code:
+                                # Delete all related reminder
+                                quote_ctx.set_price_reminder(
+                                    code=hti_code,
+                                    op=SetPriceReminderOp.DEL_ALL,
+                                )
+
+                                ret_place_order, place_order_data = trd_ctx.place_order(
+                                    price=28,
+                                    qty=HTI_QTY,
+                                    code=hti_code,
+                                    trd_side=TrdSide.SELL,
+                                    order_type=OrderType.MARKET,
+                                    trd_env=TRADE_ENV,
+                                )
+                                if ret_place_order == RET_OK:
+                                    print(place_order_data)
+                                    print(
+                                        "Finished " + hti_code + " trade:",
+                                        datetime.datetime.now(
+                                            pytz.timezone("Asia/Hong_Kong")
+                                        ),
+                                    )
+                                else:
+                                    print("place_order error: ", place_order_data)
+                            return RET_OK, content
+
+                    handler = PriceReminderTest()
+                    quote_ctx.set_handler(handler)
+
+                    # Set HTI take profit reminder
+                    ret_take_profit, take_profit_data = quote_ctx.set_price_reminder(
+                        code=hti_code,
+                        op=SetPriceReminderOp.ADD,
+                        key=None,
+                        reminder_type=PriceReminderType.PRICE_UP,
+                        reminder_freq=PriceReminderFreq.ONCE,
+                        value=hti_take_profit_price,
+                        note="algoexp",
+                    )
+                    if ret_take_profit == RET_OK:
+                        print(
+                            "Set HTI take profit reminder successfully:",
+                            hti_take_profit_price,
                         )
-                        if ret == RET_OK:
-                            print(data)
+                    else:
+                        print("error:", take_profit_data)
 
-                            class PriceReminderTest(PriceReminderHandlerBase):
-                                def on_recv_rsp(self, rsp_pb):
-                                    ret_code, content = super(
-                                        PriceReminderTest, self
-                                    ).on_recv_rsp(rsp_pb)
-                                    if ret_code != RET_OK:
-                                        print(
-                                            "PriceReminderTest: error, msg: %s"
-                                            % content
-                                        )
-                                        return RET_ERROR, content
-                                    print("PriceReminderTest ", content)
+                    # Set HTI stop loss reminder
+                    ret_stop_loss, stop_loss_data = quote_ctx.set_price_reminder(
+                        code=hti_code,
+                        op=SetPriceReminderOp.ADD,
+                        key=None,
+                        reminder_type=PriceReminderType.PRICE_DOWN,
+                        reminder_freq=PriceReminderFreq.ONCE,
+                        value=hti_stop_loss_price,
+                        note="algoexp",
+                    )
+                    if ret_stop_loss == RET_OK:
+                        print(
+                            "Set HTI stop loss reminder successfully:",
+                            hti_stop_loss_price,
+                        )
+                    else:
+                        print("error:", stop_loss_data)
+                    await asyncio.sleep(reminder_time_diff_til_end())
 
-                                    # Place HTI take profit/stop loss order
-                                    if content["code"] == hti_code:
-                                        # Delete all related reminder
-                                        quote_ctx.set_price_reminder(
-                                            code=hti_code,
-                                            op=SetPriceReminderOp.DEL_ALL,
-                                        )
-
-                                        ret, data = trd_ctx.position_list_query(
-                                            code=hti_code,
-                                            trd_env=TRADE_ENV,
-                                        )
-                                        if ret == RET_OK:
-                                            print(data)
-                                            if data.shape[0] > 0 and data["qty"][0] > 0:
-                                                ret, data = trd_ctx.place_order(
-                                                    price=28,
-                                                    qty=data["qty"][0],
-                                                    code=hti_code,
-                                                    trd_side=TrdSide.SELL,
-                                                    order_type=OrderType.MARKET,
-                                                    trd_env=TRADE_ENV,
-                                                )
-                                                if ret == RET_OK:
-                                                    print(data)
-                                                    print(
-                                                        "Finished "
-                                                        + hti_code
-                                                        + " trade:",
-                                                        datetime.datetime.now(
-                                                            pytz.timezone(
-                                                                "Asia/Hong_Kong"
-                                                            )
-                                                        ),
-                                                    )
-                                                else:
-                                                    print("place_order error: ", data)
-                                        else:
-                                            print("position_list_query error: ", data)
-                                    return RET_OK, content
-
-                            handler = PriceReminderTest()
-                            quote_ctx.set_handler(handler)
-
-                            # Set HTI take profit reminder
-                            ret_take_profit, take_profit_data = (
-                                quote_ctx.set_price_reminder(
-                                    code=hti_code,
-                                    op=SetPriceReminderOp.ADD,
-                                    key=None,
-                                    reminder_type=PriceReminderType.PRICE_UP,
-                                    reminder_freq=PriceReminderFreq.ONCE,
-                                    value=hti_take_profit_price,
-                                )
-                            )
-                            if ret_take_profit == RET_OK:
-                                print(
-                                    "Set HTI take profit reminder successfully:",
-                                    hti_take_profit_price,
-                                )
-                            else:
-                                print("error:", take_profit_data)
-
-                            # Set HTI stop loss reminder
-                            ret_stop_loss, stop_loss_data = (
-                                quote_ctx.set_price_reminder(
-                                    code=hti_code,
-                                    op=SetPriceReminderOp.ADD,
-                                    key=None,
-                                    reminder_type=PriceReminderType.PRICE_DOWN,
-                                    reminder_freq=PriceReminderFreq.ONCE,
-                                    value=hti_stop_loss_price,
-                                )
-                            )
-                            if ret_stop_loss == RET_OK:
-                                print(
-                                    "Set HTI stop loss reminder successfully:",
-                                    hti_stop_loss_price,
-                                )
-                            else:
-                                print("error:", stop_loss_data)
-                            await asyncio.sleep(reminder_time_diff_til_end())
-
-                            # Delete all related reminder
-                            quote_ctx.set_price_reminder(
-                                code=hti_code,
-                                op=SetPriceReminderOp.DEL_ALL,
-                            )
-                        else:
-                            print("place_order error: ", data)
+                    # Delete all related reminder
+                    quote_ctx.set_price_reminder(
+                        code=hti_code,
+                        op=SetPriceReminderOp.DEL_ALL,
+                    )
                 else:
-                    print("position_list_query error: ", data)
+                    print("place_order error: ", place_order_data)
             else:
-                print("unlock_trade failed: ", data)
+                print("unlock_trade failed: ", unlock_trade_data)
 
             trd_ctx.close()
             quote_ctx.close()
@@ -270,137 +242,111 @@ def hsif():
             trd_ctx = OpenFutureTradeContext()
             quote_ctx = OpenQuoteContext()
 
-            ret, data = trd_ctx.unlock_trade(FUTU_TRADING_PWD)
-            if ret == RET_OK:
-                ret, data = trd_ctx.position_list_query(
+            ret_unlock_trade, unlock_trade_data = trd_ctx.unlock_trade(FUTU_TRADING_PWD)
+            if ret_unlock_trade == RET_OK:
+
+                # Place HSIF put order
+                ret_place_order, place_order_data = trd_ctx.place_order(
+                    price=28,
+                    qty=HSIF_QTY,
                     code=HSIF_CODE + hsif_trade_number,
+                    trd_side=TrdSide.SELL,
+                    order_type=OrderType.MARKET,
                     trd_env=TRADE_ENV,
                 )
-                if ret == RET_OK:
-                    print(data)
-                    if data.shape[0] == 0 or (
-                        data.shape[0] > 0 and data["qty"][0] == 0
-                    ):
-                        # Place HSIF put order
-                        ret, data = trd_ctx.place_order(
-                            price=28,
-                            qty=HSIF_QTY,
-                            code=HSIF_CODE + hsif_trade_number,
-                            trd_side=TrdSide.SELL,
-                            order_type=OrderType.MARKET,
-                            trd_env=TRADE_ENV,
+                if ret_place_order == RET_OK:
+                    print(place_order_data)
+
+                    class PriceReminderTest(PriceReminderHandlerBase):
+                        def on_recv_rsp(self, rsp_pb):
+                            ret_code, content = super(
+                                PriceReminderTest, self
+                            ).on_recv_rsp(rsp_pb)
+                            if ret_code != RET_OK:
+                                print("PriceReminderTest: error, msg: %s" % content)
+                                return RET_ERROR, content
+                            print("PriceReminderTest ", content)
+
+                            # Place HSIF take profit/stop loss order
+                            if content["code"] == "HK.HSI" + hsif_trade_number:
+                                # Delete all related reminder
+                                quote_ctx.set_price_reminder(
+                                    code="HK.HSI" + hsif_trade_number,
+                                    op=SetPriceReminderOp.DEL_ALL,
+                                )
+
+                                ret_place_order, place_order_data = trd_ctx.place_order(
+                                    price=28,
+                                    qty=HSIF_QTY,
+                                    code=HSIF_CODE + hsif_trade_number,
+                                    trd_side=TrdSide.BUY,
+                                    order_type=OrderType.MARKET,
+                                    trd_env=TRADE_ENV,
+                                )
+                                if ret_place_order == RET_OK:
+                                    print(place_order_data)
+                                    print(
+                                        "Finished "
+                                        + HSIF_CODE
+                                        + hsif_trade_number
+                                        + " trade:",
+                                        datetime.datetime.now(
+                                            pytz.timezone("Asia/Hong_Kong")
+                                        ),
+                                    )
+                                else:
+                                    print("place_order error: ", place_order_data)
+                            return RET_OK, content
+
+                    handler = PriceReminderTest()
+                    quote_ctx.set_handler(handler)
+
+                    # Set HSIF take profit reminder
+                    ret_take_profit, take_profit_data = quote_ctx.set_price_reminder(
+                        code="HK.HSI" + hsif_trade_number,
+                        op=SetPriceReminderOp.ADD,
+                        key=None,
+                        reminder_type=PriceReminderType.PRICE_DOWN,
+                        reminder_freq=PriceReminderFreq.ONCE,
+                        value=hsif_take_profit_price,
+                        note="algoexp",
+                    )
+                    if ret_take_profit == RET_OK:
+                        print(
+                            "Set HSIF take profit reminder successfully:",
+                            hsif_take_profit_price,
                         )
-                        if ret == RET_OK:
-                            print(data)
+                    else:
+                        print("error:", take_profit_data)
 
-                            class PriceReminderTest(PriceReminderHandlerBase):
-                                def on_recv_rsp(self, rsp_pb):
-                                    ret_code, content = super(
-                                        PriceReminderTest, self
-                                    ).on_recv_rsp(rsp_pb)
-                                    if ret_code != RET_OK:
-                                        print(
-                                            "PriceReminderTest: error, msg: %s"
-                                            % content
-                                        )
-                                        return RET_ERROR, content
-                                    print("PriceReminderTest ", content)
+                    # Set HSIF stop loss reminder
+                    ret_stop_loss, stop_loss_data = quote_ctx.set_price_reminder(
+                        code="HK.HSI" + hsif_trade_number,
+                        op=SetPriceReminderOp.ADD,
+                        key=None,
+                        reminder_type=PriceReminderType.PRICE_UP,
+                        reminder_freq=PriceReminderFreq.ONCE,
+                        value=hsif_stop_loss_price,
+                        note="algoexp",
+                    )
+                    if ret_stop_loss == RET_OK:
+                        print(
+                            "Set HSIF stop loss reminder successfully:",
+                            hsif_stop_loss_price,
+                        )
+                    else:
+                        print("error:", stop_loss_data)
+                    await asyncio.sleep(reminder_time_diff_til_end())
 
-                                    # Place HSIF take profit/stop loss order
-                                    if content["code"] == "HK.HSI" + hsif_trade_number:
-                                        # Delete all related reminder
-                                        quote_ctx.set_price_reminder(
-                                            code="HK.HSI" + hsif_trade_number,
-                                            op=SetPriceReminderOp.DEL_ALL,
-                                        )
-
-                                        ret, data = trd_ctx.position_list_query(
-                                            code=HSIF_CODE + hsif_trade_number,
-                                            trd_env=TRADE_ENV,
-                                        )
-                                        if ret == RET_OK:
-                                            print(data)
-                                            if data.shape[0] > 0 and data["qty"][0] < 0:
-                                                ret, data = trd_ctx.place_order(
-                                                    price=28,
-                                                    qty=data["qty"][0] * -1,
-                                                    code=HSIF_CODE + hsif_trade_number,
-                                                    trd_side=TrdSide.BUY,
-                                                    order_type=OrderType.MARKET,
-                                                    trd_env=TRADE_ENV,
-                                                )
-                                                if ret == RET_OK:
-                                                    print(data)
-                                                    print(
-                                                        "Finished "
-                                                        + HSIF_CODE
-                                                        + hsif_trade_number
-                                                        + " trade:",
-                                                        datetime.datetime.now(
-                                                            pytz.timezone(
-                                                                "Asia/Hong_Kong"
-                                                            )
-                                                        ),
-                                                    )
-                                                else:
-                                                    print("place_order error: ", data)
-                                        else:
-                                            print("position_list_query error: ", data)
-                                    return RET_OK, content
-
-                            handler = PriceReminderTest()
-                            quote_ctx.set_handler(handler)
-
-                            # Set HSIF take profit reminder
-                            ret_take_profit, take_profit_data = (
-                                quote_ctx.set_price_reminder(
-                                    code="HK.HSI" + hsif_trade_number,
-                                    op=SetPriceReminderOp.ADD,
-                                    key=None,
-                                    reminder_type=PriceReminderType.PRICE_DOWN,
-                                    reminder_freq=PriceReminderFreq.ONCE,
-                                    value=hsif_take_profit_price,
-                                )
-                            )
-                            if ret_take_profit == RET_OK:
-                                print(
-                                    "Set HSIF take profit reminder successfully:",
-                                    hsif_take_profit_price,
-                                )
-                            else:
-                                print("error:", take_profit_data)
-
-                            # Set HSIF stop loss reminder
-                            ret_stop_loss, stop_loss_data = (
-                                quote_ctx.set_price_reminder(
-                                    code="HK.HSI" + hsif_trade_number,
-                                    op=SetPriceReminderOp.ADD,
-                                    key=None,
-                                    reminder_type=PriceReminderType.PRICE_UP,
-                                    reminder_freq=PriceReminderFreq.ONCE,
-                                    value=hsif_stop_loss_price,
-                                )
-                            )
-                            if ret_stop_loss == RET_OK:
-                                print(
-                                    "Set HSIF stop loss reminder successfully:",
-                                    hsif_stop_loss_price,
-                                )
-                            else:
-                                print("error:", stop_loss_data)
-                            await asyncio.sleep(reminder_time_diff_til_end())
-
-                            # Delete all related reminder
-                            quote_ctx.set_price_reminder(
-                                code="HK.HSI" + hsif_trade_number,
-                                op=SetPriceReminderOp.DEL_ALL,
-                            )
-                        else:
-                            print("place_order error: ", data)
+                    # Delete all related reminder
+                    quote_ctx.set_price_reminder(
+                        code="HK.HSI" + hsif_trade_number,
+                        op=SetPriceReminderOp.DEL_ALL,
+                    )
                 else:
-                    print("position_list_query error: ", data)
+                    print("place_order error: ", place_order_data)
             else:
-                print("unlock_trade failed: ", data)
+                print("unlock_trade failed: ", unlock_trade_data)
 
             trd_ctx.close()
             quote_ctx.close()
@@ -432,74 +378,91 @@ def close_position():
             current_time.date() in half_dates
             and current_time.time().strftime("%H:%M") == HALF_DAY_CLOSE_TIME
         ) or current_time.time().strftime("%H:%M") == NORMAL_CLOSE_TIME:
+            trade_num = trade_number()
+            hti_code = "HK.HTI" + trade_num
+            hsif_code = "HK.HSI" + trade_num
+
             trd_ctx = OpenFutureTradeContext()
             quote_ctx = OpenQuoteContext()
 
-            ret, data = trd_ctx.unlock_trade(FUTU_TRADING_PWD)
-            if ret == RET_OK:
-                ret, position_data = trd_ctx.position_list_query(
-                    trd_env=TRADE_ENV,
-                )
-                if ret == RET_OK:
-                    print(position_data)
-                    if position_data.shape[0] > 0:
-                        for i in range(position_data.shape[0]):
-                            # Delete all related reminder
-                            quote_ctx.set_price_reminder(
-                                code=position_data["code"][i],
-                                op=SetPriceReminderOp.DEL_ALL,
-                            )
+            ret_unlock_trade, unlock_trade_data = trd_ctx.unlock_trade(FUTU_TRADING_PWD)
+            if ret_unlock_trade == RET_OK:
 
-                            # Place close long position order
-                            if (
-                                position_data["position_side"][i] == PositionSide.LONG
-                                and position_data["qty"][i] > 0
-                            ):
-                                ret, data = trd_ctx.place_order(
+                # Place close HTI position order
+                ret_get_hti_reminder, get_hti_reminder_data = (
+                    quote_ctx.get_price_reminder(code=hti_code)
+                )
+                if ret_get_hti_reminder == RET_OK:
+                    print(get_hti_reminder_data)
+                    if get_hti_reminder_data.shape[0] > 0:
+                        for i in range(get_hti_reminder_data.shape[0]):
+                            if get_hti_reminder_data["note"][i] == "algoexp":
+                                # Delete all related reminder
+                                quote_ctx.set_price_reminder(
+                                    code=hti_code,
+                                    op=SetPriceReminderOp.DEL_ALL,
+                                )
+
+                                ret_place_order, place_order_data = trd_ctx.place_order(
                                     price=28,
-                                    qty=position_data["qty"][i],
-                                    code=position_data["code"][i],
+                                    qty=HTI_QTY,
+                                    code=hti_code,
                                     trd_side=TrdSide.SELL,
                                     order_type=OrderType.MARKET,
                                     trd_env=TRADE_ENV,
                                 )
-                                if ret == RET_OK:
-                                    print(data)
+                                if ret_place_order == RET_OK:
+                                    print(place_order_data)
                                     print(
-                                        "Finished "
-                                        + position_data["code"][i]
-                                        + " trade:",
-                                        current_time,
+                                        "Finished " + hti_code + " trade:",
+                                        datetime.datetime.now(
+                                            pytz.timezone("Asia/Hong_Kong")
+                                        ),
                                     )
                                 else:
-                                    print("place_order error: ", data)
-                            # Place close short position order
-                            elif (
-                                position_data["position_side"][i] == PositionSide.SHORT
-                                and position_data["qty"][i] < 0
-                            ):
-                                ret, data = trd_ctx.place_order(
+                                    print("place_order error: ", place_order_data)
+                                break
+                else:
+                    print("error:", get_hti_reminder_data)
+
+                # Place close HSIF position order
+                ret_get_hsif_reminder, get_hsif_reminder_data = (
+                    quote_ctx.get_price_reminder(code=hsif_code)
+                )
+                if ret_get_hsif_reminder == RET_OK:
+                    print(get_hsif_reminder_data)
+                    if get_hsif_reminder_data.shape[0] > 0:
+                        for i in range(get_hsif_reminder_data.shape[0]):
+                            if get_hsif_reminder_data["note"][i] == "algoexp":
+                                # Delete all related reminder
+                                quote_ctx.set_price_reminder(
+                                    code=hsif_code,
+                                    op=SetPriceReminderOp.DEL_ALL,
+                                )
+
+                                ret_place_order, place_order_data = trd_ctx.place_order(
                                     price=28,
-                                    qty=position_data["qty"][i] * -1,
-                                    code=position_data["code"][i],
+                                    qty=HSIF_QTY,
+                                    code=HSIF_CODE + trade_num,
                                     trd_side=TrdSide.BUY,
                                     order_type=OrderType.MARKET,
                                     trd_env=TRADE_ENV,
                                 )
-                                if ret == RET_OK:
-                                    print(data)
+                                if ret_place_order == RET_OK:
+                                    print(place_order_data)
                                     print(
-                                        "Finished "
-                                        + position_data["code"][i]
-                                        + " trade:",
-                                        current_time,
+                                        "Finished " + HSIF_CODE + trade_num + " trade:",
+                                        datetime.datetime.now(
+                                            pytz.timezone("Asia/Hong_Kong")
+                                        ),
                                     )
                                 else:
-                                    print("place_order error: ", data)
+                                    print("place_order error: ", place_order_data)
+                                break
                 else:
-                    print("position_list_query error: ", position_data)
+                    print("error:", get_hsif_reminder_data)
             else:
-                print("unlock_trade failed: ", data)
+                print("unlock_trade failed: ", unlock_trade_data)
 
             trd_ctx.close()
             quote_ctx.close()
