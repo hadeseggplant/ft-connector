@@ -132,12 +132,32 @@ def hti():
                             print("PriceReminderTest ", content)
 
                             # Place HTI take profit/stop loss order
-                            if content["code"] == hti_code:
-                                # Delete all related reminder
+                            if (
+                                content["code"] == hti_code
+                                and content["note"] == "algoexp"
+                            ):
+                                # Delete related reminder
                                 quote_ctx.set_price_reminder(
-                                    code=hti_code,
-                                    op=SetPriceReminderOp.DEL_ALL,
+                                    key=content["key"],
+                                    op=SetPriceReminderOp.DEL,
                                 )
+                                ret_del_hti_reminder, del_hti_reminder_data = (
+                                    quote_ctx.get_price_reminder(code=hti_code)
+                                )
+                                if ret_del_hti_reminder == RET_OK:
+                                    if del_hti_reminder_data.shape[0] > 0:
+                                        for i in range(del_hti_reminder_data.shape[0]):
+                                            if (
+                                                del_hti_reminder_data["note"][i]
+                                                == "algoexp"
+                                            ):
+                                                # Delete related reminder
+                                                quote_ctx.set_price_reminder(
+                                                    key=del_hti_reminder_data["key"][i],
+                                                    op=SetPriceReminderOp.DEL,
+                                                )
+                                else:
+                                    print("error:", del_hti_reminder_data)
 
                                 ret_place_order, place_order_data = trd_ctx.place_order(
                                     price=28,
@@ -157,6 +177,7 @@ def hti():
                                     )
                                 else:
                                     print("place_order error: ", place_order_data)
+
                             return RET_OK, content
 
                     handler = PriceReminderTest()
@@ -199,13 +220,9 @@ def hti():
                         print("error:", stop_loss_data)
                     await asyncio.sleep(reminder_time_diff_til_end())
 
-                    # Delete all related reminder
-                    quote_ctx.set_price_reminder(
-                        code=hti_code,
-                        op=SetPriceReminderOp.DEL_ALL,
-                    )
                 else:
                     print("place_order error: ", place_order_data)
+
             else:
                 print("unlock_trade failed: ", unlock_trade_data)
 
@@ -268,12 +285,36 @@ def hsif():
                             print("PriceReminderTest ", content)
 
                             # Place HSIF take profit/stop loss order
-                            if content["code"] == "HK.HSI" + hsif_trade_number:
-                                # Delete all related reminder
+                            if (
+                                content["code"] == "HK.HSI" + hsif_trade_number
+                                and content["note"] == "algoexp"
+                            ):
+                                # Delete related reminder
                                 quote_ctx.set_price_reminder(
-                                    code="HK.HSI" + hsif_trade_number,
-                                    op=SetPriceReminderOp.DEL_ALL,
+                                    key=content["key"],
+                                    op=SetPriceReminderOp.DEL,
                                 )
+                                ret_del_hsif_reminder, del_hsif_reminder_data = (
+                                    quote_ctx.get_price_reminder(
+                                        code="HK.HSI" + hsif_trade_number
+                                    )
+                                )
+                                if ret_del_hsif_reminder == RET_OK:
+                                    if del_hsif_reminder_data.shape[0] > 0:
+                                        for i in range(del_hsif_reminder_data.shape[0]):
+                                            if (
+                                                del_hsif_reminder_data["note"][i]
+                                                == "algoexp"
+                                            ):
+                                                # Delete related reminder
+                                                quote_ctx.set_price_reminder(
+                                                    key=del_hsif_reminder_data["key"][
+                                                        i
+                                                    ],
+                                                    op=SetPriceReminderOp.DEL,
+                                                )
+                                else:
+                                    print("error:", del_hsif_reminder_data)
 
                                 ret_place_order, place_order_data = trd_ctx.place_order(
                                     price=28,
@@ -296,6 +337,7 @@ def hsif():
                                     )
                                 else:
                                     print("place_order error: ", place_order_data)
+
                             return RET_OK, content
 
                     handler = PriceReminderTest()
@@ -338,13 +380,9 @@ def hsif():
                         print("error:", stop_loss_data)
                     await asyncio.sleep(reminder_time_diff_til_end())
 
-                    # Delete all related reminder
-                    quote_ctx.set_price_reminder(
-                        code="HK.HSI" + hsif_trade_number,
-                        op=SetPriceReminderOp.DEL_ALL,
-                    )
                 else:
                     print("place_order error: ", place_order_data)
+
             else:
                 print("unlock_trade failed: ", unlock_trade_data)
 
@@ -393,15 +431,31 @@ def close_position():
                     quote_ctx.get_price_reminder(code=hti_code)
                 )
                 if ret_get_hti_reminder == RET_OK:
-                    print(get_hti_reminder_data)
                     if get_hti_reminder_data.shape[0] > 0:
                         for i in range(get_hti_reminder_data.shape[0]):
                             if get_hti_reminder_data["note"][i] == "algoexp":
-                                # Delete all related reminder
+                                # Delete related reminder
                                 quote_ctx.set_price_reminder(
-                                    code=hti_code,
-                                    op=SetPriceReminderOp.DEL_ALL,
+                                    key=get_hti_reminder_data["key"][i],
+                                    op=SetPriceReminderOp.DEL,
                                 )
+                                ret_del_hti_reminder, del_hti_reminder_data = (
+                                    quote_ctx.get_price_reminder(code=hti_code)
+                                )
+                                if ret_del_hti_reminder == RET_OK:
+                                    if del_hti_reminder_data.shape[0] > 0:
+                                        for i in range(del_hti_reminder_data.shape[0]):
+                                            if (
+                                                del_hti_reminder_data["note"][i]
+                                                == "algoexp"
+                                            ):
+                                                # Delete related reminder
+                                                quote_ctx.set_price_reminder(
+                                                    key=del_hti_reminder_data["key"][i],
+                                                    op=SetPriceReminderOp.DEL,
+                                                )
+                                else:
+                                    print("error:", del_hti_reminder_data)
 
                                 ret_place_order, place_order_data = trd_ctx.place_order(
                                     price=28,
@@ -430,15 +484,33 @@ def close_position():
                     quote_ctx.get_price_reminder(code=hsif_code)
                 )
                 if ret_get_hsif_reminder == RET_OK:
-                    print(get_hsif_reminder_data)
                     if get_hsif_reminder_data.shape[0] > 0:
                         for i in range(get_hsif_reminder_data.shape[0]):
                             if get_hsif_reminder_data["note"][i] == "algoexp":
-                                # Delete all related reminder
+                                # Delete related reminder
                                 quote_ctx.set_price_reminder(
-                                    code=hsif_code,
-                                    op=SetPriceReminderOp.DEL_ALL,
+                                    key=get_hsif_reminder_data["key"][i],
+                                    op=SetPriceReminderOp.DEL,
                                 )
+                                ret_del_hsif_reminder, del_hsif_reminder_data = (
+                                    quote_ctx.get_price_reminder(code=hsif_code)
+                                )
+                                if ret_del_hsif_reminder == RET_OK:
+                                    if del_hsif_reminder_data.shape[0] > 0:
+                                        for i in range(del_hsif_reminder_data.shape[0]):
+                                            if (
+                                                del_hsif_reminder_data["note"][i]
+                                                == "algoexp"
+                                            ):
+                                                # Delete related reminder
+                                                quote_ctx.set_price_reminder(
+                                                    key=del_hsif_reminder_data["key"][
+                                                        i
+                                                    ],
+                                                    op=SetPriceReminderOp.DEL,
+                                                )
+                                else:
+                                    print("error:", del_hsif_reminder_data)
 
                                 ret_place_order, place_order_data = trd_ctx.place_order(
                                     price=28,
@@ -461,6 +533,7 @@ def close_position():
                                 break
                 else:
                     print("error:", get_hsif_reminder_data)
+
             else:
                 print("unlock_trade failed: ", unlock_trade_data)
 
