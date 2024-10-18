@@ -138,6 +138,7 @@ def hti():
                             ):
                                 # Delete related reminder
                                 quote_ctx.set_price_reminder(
+                                    code=hti_code,
                                     key=content["key"],
                                     op=SetPriceReminderOp.DEL,
                                 )
@@ -153,6 +154,7 @@ def hti():
                                             ):
                                                 # Delete related reminder
                                                 quote_ctx.set_price_reminder(
+                                                    code=hti_code,
                                                     key=del_hti_reminder_data["key"][i],
                                                     op=SetPriceReminderOp.DEL,
                                                 )
@@ -291,6 +293,7 @@ def hsif():
                             ):
                                 # Delete related reminder
                                 quote_ctx.set_price_reminder(
+                                    code="HK.HSI" + hsif_trade_number,
                                     key=content["key"],
                                     op=SetPriceReminderOp.DEL,
                                 )
@@ -308,6 +311,7 @@ def hsif():
                                             ):
                                                 # Delete related reminder
                                                 quote_ctx.set_price_reminder(
+                                                    code="HK.HSI" + hsif_trade_number,
                                                     key=del_hsif_reminder_data["key"][
                                                         i
                                                     ],
@@ -436,6 +440,7 @@ def close_position():
                             if get_hti_reminder_data["note"][i] == "algoexp":
                                 # Delete related reminder
                                 quote_ctx.set_price_reminder(
+                                    code=hti_code,
                                     key=get_hti_reminder_data["key"][i],
                                     op=SetPriceReminderOp.DEL,
                                 )
@@ -451,6 +456,7 @@ def close_position():
                                             ):
                                                 # Delete related reminder
                                                 quote_ctx.set_price_reminder(
+                                                    code=hti_code,
                                                     key=del_hti_reminder_data["key"][i],
                                                     op=SetPriceReminderOp.DEL,
                                                 )
@@ -489,6 +495,7 @@ def close_position():
                             if get_hsif_reminder_data["note"][i] == "algoexp":
                                 # Delete related reminder
                                 quote_ctx.set_price_reminder(
+                                    code=hsif_code,
                                     key=get_hsif_reminder_data["key"][i],
                                     op=SetPriceReminderOp.DEL,
                                 )
@@ -504,6 +511,7 @@ def close_position():
                                             ):
                                                 # Delete related reminder
                                                 quote_ctx.set_price_reminder(
+                                                    code=hsif_code,
                                                     key=del_hsif_reminder_data["key"][
                                                         i
                                                     ],
