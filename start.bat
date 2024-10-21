@@ -1,4 +1,6 @@
 @echo off
+setlocal enabledelayedexpansion
+
 set packages=futu-api telethon lunardate pytz datetime asyncio
 set "FutuOpenD=Futu OpenD.lnk"
 set LOGIN_TG_SCRIPT_NAME="./src/login_telegram.py"
@@ -9,13 +11,14 @@ echo:
 echo:
 
 for %%i in (%packages%) do (
-    pip3 show %%i >nul 2>&1
-    if %errorlevel% neq 0 (
+    pip3 show %%i > temp.txt 2>&1
+    if errorlevel 1 (
         echo Installing %%i...
         pip3 install %%i
     ) else (
         echo %%i is already installed.
     )
+    del temp.txt
 )
 
 echo:
@@ -25,3 +28,5 @@ echo Finished checking and installing Python libraries
 python %LOGIN_TG_SCRIPT_NAME%
 start "" "%FutuOpenD%"
 python %FT_CONNECTOR_SCRIPT_NAME%
+
+endlocal
