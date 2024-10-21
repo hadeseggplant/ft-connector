@@ -8,20 +8,17 @@ set FT_CONNECTOR_SCRIPT_NAME="./src/ft_connector.py"
 
 echo Start checking and installing Python libraries...
 echo:
-echo:
 
 for %%i in (%packages%) do (
-    pip3 show %%i > temp.txt 2>&1
+    pip3 show %%i >nul 2>&1
     if errorlevel 1 (
         echo Installing %%i...
         pip3 install %%i
     ) else (
         echo %%i is already installed.
     )
-    del temp.txt
 )
 
-echo:
 echo:
 echo Finished checking and installing Python libraries
 
