@@ -18,7 +18,7 @@
 
 
 #### 2. 安裝Python 3.11：https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe
-- 請勾選最底的 `Add Python 3.11 to PATH` 再按安裝
+- 請勾選最底的 `Add python.exe to PATH` 再按安裝
 - 如安裝library時出現error，請[開啟cmd](https://blog.miniasp.com/post/2017/09/06/Windows-Explorer-tips-open-cmd-and-VSCode-quickly)輸入 `python -V` 檢查是否安裝了非3.11版本，牛牛API目前只支援至此版本
 
 
