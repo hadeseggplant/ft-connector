@@ -568,7 +568,6 @@ def close_position():
 
             except KeyError:
                 print("Today is not a trade day.")
-                break
 
         time.sleep(30)
 
