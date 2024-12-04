@@ -94,7 +94,20 @@ def hti():
         message = event.message
 
         # Filter HTI signal
-        if "系統提交 科指期貨HTI 買盤" in message.text:
+        if "系統提交 科指期貨HTI" in message.text:
+            if "系統提交 科指期貨HTI 買盤" in message.text:
+                hti_trade_side = TrdSide.BUY
+                hti_close_side = TrdSide.SELL
+                hti_tp_reminder_type = PriceReminderType.PRICE_UP
+                hti_sl_reminder_type = PriceReminderType.PRICE_DOWN
+                hti_reminder_note = "algoexphticall"
+            elif "系統提交 科指期貨HTI 沽盤" in message.text:
+                hti_trade_side = TrdSide.SELL
+                hti_close_side = TrdSide.BUY
+                hti_tp_reminder_type = PriceReminderType.PRICE_DOWN
+                hti_sl_reminder_type = PriceReminderType.PRICE_UP
+                hti_reminder_note = "algoexphtiput"
+
             hti_code = "HK.HTI" + trade_number()
 
             hti_take_profit_msg = re.search(r"止賺價為(\d+\.\d+)", message.text)
@@ -109,12 +122,12 @@ def hti():
             ret_unlock_trade, unlock_trade_data = trd_ctx.unlock_trade(FUTU_TRADING_PWD)
             if ret_unlock_trade == RET_OK:
 
-                # Place HTI call order
+                # Place HTI order
                 ret_place_order, place_order_data = trd_ctx.place_order(
                     price=28,
                     qty=HTI_QTY,
                     code=hti_code,
-                    trd_side=TrdSide.BUY,
+                    trd_side=hti_trade_side,
                     order_type=OrderType.MARKET,
                     trd_env=TRADE_ENV,
                 )
@@ -165,7 +178,7 @@ def hti():
                                     price=28,
                                     qty=HTI_QTY,
                                     code=hti_code,
-                                    trd_side=TrdSide.SELL,
+                                    trd_side=hti_close_side,
                                     order_type=OrderType.MARKET,
                                     trd_env=TRADE_ENV,
                                 )
@@ -190,10 +203,10 @@ def hti():
                         code=hti_code,
                         op=SetPriceReminderOp.ADD,
                         key=None,
-                        reminder_type=PriceReminderType.PRICE_UP,
+                        reminder_type=hti_tp_reminder_type,
                         reminder_freq=PriceReminderFreq.ONCE,
                         value=hti_take_profit_price,
-                        note="algoexp",
+                        note=hti_reminder_note,
                     )
                     if ret_take_profit == RET_OK:
                         print(
@@ -208,10 +221,10 @@ def hti():
                         code=hti_code,
                         op=SetPriceReminderOp.ADD,
                         key=None,
-                        reminder_type=PriceReminderType.PRICE_DOWN,
+                        reminder_type=hti_sl_reminder_type,
                         reminder_freq=PriceReminderFreq.ONCE,
                         value=hti_stop_loss_price,
-                        note="algoexp",
+                        note=hti_reminder_note,
                     )
                     if ret_stop_loss == RET_OK:
                         print(
@@ -250,7 +263,20 @@ def hsif():
         message = event.message
 
         # Filter HSIF signal
-        if "系統提交 恆指期貨HSIF 沽盤" in message.text:
+        if "系統提交 恆指期貨HSIF" in message.text:
+            if "系統提交 恆指期貨HSIF 買盤" in message.text:
+                hsif_trade_side = TrdSide.BUY
+                hsif_close_side = TrdSide.SELL
+                hsif_tp_reminder_type = PriceReminderType.PRICE_UP
+                hsif_sl_reminder_type = PriceReminderType.PRICE_DOWN
+                hsif_reminder_note = "algoexphsifcall"
+            elif "系統提交 恆指期貨HSIF 沽盤" in message.text:
+                hsif_trade_side = TrdSide.SELL
+                hsif_close_side = TrdSide.BUY
+                hsif_tp_reminder_type = PriceReminderType.PRICE_DOWN
+                hsif_sl_reminder_type = PriceReminderType.PRICE_UP
+                hsif_reminder_note = "algoexphsifput"
+
             hsif_trade_number = trade_number()
 
             hsif_take_profit_msg = re.search(r"止賺價為(\d+\.\d+)", message.text)
@@ -265,12 +291,12 @@ def hsif():
             ret_unlock_trade, unlock_trade_data = trd_ctx.unlock_trade(FUTU_TRADING_PWD)
             if ret_unlock_trade == RET_OK:
 
-                # Place HSIF put order
+                # Place HSIF order
                 ret_place_order, place_order_data = trd_ctx.place_order(
                     price=28,
                     qty=HSIF_QTY,
                     code=HSIF_CODE + hsif_trade_number,
-                    trd_side=TrdSide.SELL,
+                    trd_side=hsif_trade_side,
                     order_type=OrderType.MARKET,
                     trd_env=TRADE_ENV,
                 )
@@ -325,7 +351,7 @@ def hsif():
                                     price=28,
                                     qty=HSIF_QTY,
                                     code=HSIF_CODE + hsif_trade_number,
-                                    trd_side=TrdSide.BUY,
+                                    trd_side=hsif_close_side,
                                     order_type=OrderType.MARKET,
                                     trd_env=TRADE_ENV,
                                 )
@@ -353,10 +379,10 @@ def hsif():
                         code="HK.HSI" + hsif_trade_number,
                         op=SetPriceReminderOp.ADD,
                         key=None,
-                        reminder_type=PriceReminderType.PRICE_DOWN,
+                        reminder_type=hsif_tp_reminder_type,
                         reminder_freq=PriceReminderFreq.ONCE,
                         value=hsif_take_profit_price,
-                        note="algoexp",
+                        note=hsif_reminder_note,
                     )
                     if ret_take_profit == RET_OK:
                         print(
@@ -371,10 +397,10 @@ def hsif():
                         code="HK.HSI" + hsif_trade_number,
                         op=SetPriceReminderOp.ADD,
                         key=None,
-                        reminder_type=PriceReminderType.PRICE_UP,
+                        reminder_type=hsif_sl_reminder_type,
                         reminder_freq=PriceReminderFreq.ONCE,
                         value=hsif_stop_loss_price,
-                        note="algoexp",
+                        note=hsif_reminder_note,
                     )
                     if ret_stop_loss == RET_OK:
                         print(
@@ -442,7 +468,22 @@ def close_position():
                     if ret_get_hti_reminder == RET_OK:
                         if get_hti_reminder_data.shape[0] > 0:
                             for i in range(get_hti_reminder_data.shape[0]):
-                                if get_hti_reminder_data["note"][i] == "algoexp":
+                                if (
+                                    get_hti_reminder_data["note"][i] == "algoexphticall"
+                                    or get_hti_reminder_data["note"][i]
+                                    == "algoexphtiput"
+                                ):
+                                    if (
+                                        get_hti_reminder_data["note"][i]
+                                        == "algoexphticall"
+                                    ):
+                                        hti_close_side = TrdSide.SELL
+                                    elif (
+                                        get_hti_reminder_data["note"][i]
+                                        == "algoexphtiput"
+                                    ):
+                                        hti_close_side = TrdSide.BUY
+
                                     # Delete related reminder
                                     quote_ctx.set_price_reminder(
                                         code=hti_code,
@@ -459,7 +500,9 @@ def close_position():
                                             ):
                                                 if (
                                                     del_hti_reminder_data["note"][i]
-                                                    == "algoexp"
+                                                    == "algoexphticall"
+                                                    or del_hti_reminder_data["note"][i]
+                                                    == "algoexphtiput"
                                                 ):
                                                     # Delete related reminder
                                                     quote_ctx.set_price_reminder(
@@ -477,7 +520,7 @@ def close_position():
                                             price=28,
                                             qty=HTI_QTY,
                                             code=hti_code,
-                                            trd_side=TrdSide.SELL,
+                                            trd_side=hti_close_side,
                                             order_type=OrderType.MARKET,
                                             trd_env=TRADE_ENV,
                                         )
@@ -503,7 +546,23 @@ def close_position():
                     if ret_get_hsif_reminder == RET_OK:
                         if get_hsif_reminder_data.shape[0] > 0:
                             for i in range(get_hsif_reminder_data.shape[0]):
-                                if get_hsif_reminder_data["note"][i] == "algoexp":
+                                if (
+                                    get_hsif_reminder_data["note"][i]
+                                    == "algoexphsifcall"
+                                    or get_hsif_reminder_data["note"][i]
+                                    == "algoexphsifput"
+                                ):
+                                    if (
+                                        get_hsif_reminder_data["note"][i]
+                                        == "algoexphsifcall"
+                                    ):
+                                        hsif_close_side = TrdSide.SELL
+                                    elif (
+                                        get_hsif_reminder_data["note"][i]
+                                        == "algoexphsifput"
+                                    ):
+                                        hsif_close_side = TrdSide.BUY
+
                                     # Delete related reminder
                                     quote_ctx.set_price_reminder(
                                         code=hsif_code,
@@ -520,7 +579,9 @@ def close_position():
                                             ):
                                                 if (
                                                     del_hsif_reminder_data["note"][i]
-                                                    == "algoexp"
+                                                    == "algoexphsifcall"
+                                                    or del_hsif_reminder_data["note"][i]
+                                                    == "algoexphsifput"
                                                 ):
                                                     # Delete related reminder
                                                     quote_ctx.set_price_reminder(
@@ -538,7 +599,7 @@ def close_position():
                                             price=28,
                                             qty=HSIF_QTY,
                                             code=HSIF_CODE + trade_num,
-                                            trd_side=TrdSide.BUY,
+                                            trd_side=hsif_close_side,
                                             order_type=OrderType.MARKET,
                                             trd_env=TRADE_ENV,
                                         )
