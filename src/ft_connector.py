@@ -147,7 +147,7 @@ def hti():
                             # Place HTI take profit/stop loss order
                             if (
                                 content["code"] == hti_code
-                                and content["note"] == "algoexp"
+                                and content["note"] == hti_reminder_note
                             ):
                                 # Delete related reminder
                                 quote_ctx.set_price_reminder(
@@ -163,7 +163,7 @@ def hti():
                                         for i in range(del_hti_reminder_data.shape[0]):
                                             if (
                                                 del_hti_reminder_data["note"][i]
-                                                == "algoexp"
+                                                == hti_reminder_note
                                             ):
                                                 # Delete related reminder
                                                 quote_ctx.set_price_reminder(
@@ -316,7 +316,7 @@ def hsif():
                             # Place HSIF take profit/stop loss order
                             if (
                                 content["code"] == "HK.HSI" + hsif_trade_number
-                                and content["note"] == "algoexp"
+                                and content["note"] == hsif_reminder_note
                             ):
                                 # Delete related reminder
                                 quote_ctx.set_price_reminder(
@@ -334,7 +334,7 @@ def hsif():
                                         for i in range(del_hsif_reminder_data.shape[0]):
                                             if (
                                                 del_hsif_reminder_data["note"][i]
-                                                == "algoexp"
+                                                == hsif_reminder_note
                                             ):
                                                 # Delete related reminder
                                                 quote_ctx.set_price_reminder(
