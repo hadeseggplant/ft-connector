@@ -24,8 +24,8 @@ env_mapping = {
 TRADE_ENV = env_mapping.get(config["DEFAULT"]["Trade_Environment"])
 
 
-NORMAL_CLOSE_TIME = datetime.time(2, 54).strftime("%H:%M")
-HALF_DAY_CLOSE_TIME = datetime.time(11, 54).strftime("%H:%M")
+NORMAL_CLOSE_TIME = datetime.time(2, 56).strftime("%H:%M")
+HALF_DAY_CLOSE_TIME = datetime.time(12, 26).strftime("%H:%M")
 
 
 def trade_number():
